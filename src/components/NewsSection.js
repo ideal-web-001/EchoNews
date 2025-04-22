@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
+import PropTypes from 'prop-types'
+
 
 export default class NewsSection extends Component {
   // articles = [
@@ -134,7 +136,17 @@ export default class NewsSection extends Component {
   //     "content": "President Trump never seems, at least in public, to show much interest in the fine detail of any agreement. It's the agreement itself that matters to him, even if Ukraine and its allies believe it's … [+1333 chars]"
   //   }
   // ]
+static defaultProps = {
+  country: 'us',
+  category:"general",
+  pageSize:20
+};
 
+ static propTypes={
+  country: PropTypes.string,
+  category:PropTypes.string,
+  pageSize:PropTypes.number,
+}
   constructor() {
     super();
     this.state = {
@@ -145,7 +157,7 @@ export default class NewsSection extends Component {
 
   }
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=1&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=1&pageSize=${this.props.pageSize}`;
     this.setState({
       loading: true
     })
@@ -155,7 +167,7 @@ export default class NewsSection extends Component {
     //  console.log(this.state.articles)
   }
   prevPage = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
     this.setState({
       loading: true
     })
@@ -172,7 +184,7 @@ export default class NewsSection extends Component {
     if (this.state.page + 1 > (Math.ceil(this.state.totalResults / this.props.pageSize))) {
       console.log("out of bound console")
     } else {
-      let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+      let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
       this.setState({
         loading: true
       })
