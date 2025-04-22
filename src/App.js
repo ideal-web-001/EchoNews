@@ -9,7 +9,7 @@ function App() {
     <>
       <NavBar></NavBar>
       {/* <Slider /> */}
-      <NewsSection />
+      <NewsSection pageSize={20}/>
     </>
   );
 }

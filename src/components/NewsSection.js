@@ -145,43 +145,43 @@ export default class NewsSection extends Component {
 
   }
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/everything?q=india&sortBy=publishedAt&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=1&pageSize=21`;
+    let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=1&pageSize=${this.props.pageSize}`;
     this.setState({
-      loading:true
+      loading: true
     })
     let data = await fetch(url);
     let parseData = await data.json();
-    this.setState({ articles: parseData.articles, totalResults: parseData.totalResults, loading:false })
+    this.setState({ articles: parseData.articles, totalResults: parseData.totalResults, loading: false })
     //  console.log(this.state.articles)
   }
   prevPage = async () => {
-    let url = `https://newsapi.org/v2/everything?q=india&sortBy=publishedAt&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page - 1}&pageSize=10`;
+    let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
     this.setState({
-      loading:true
+      loading: true
     })
     let data = await fetch(url);
-    
+
     let parseData = await data.json();
     this.setState({
       page: this.state.page - 1,
       articles: parseData.articles,
-      loading:false
+      loading: false
     })
   }
   nextPage = async () => {
-    if (this.state.page + 1 > (Math.ceil(this.state.totalResults / 21))) {
+    if (this.state.page + 1 > (Math.ceil(this.state.totalResults / this.props.pageSize))) {
       console.log("out of bound console")
     } else {
-      let url = `https://newsapi.org/v2/everything?q=india&sortBy=publishedAt&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page + 1}&pageSize=10`;
+      let url = `https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=4e3c80cb86e04287a9949cbda8d1ddae&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
       this.setState({
-        loading:true
+        loading: true
       })
       let data = await fetch(url);
       let parseData = await data.json();
       this.setState({
         page: this.state.page + 1,
         articles: parseData.articles,
-        loading:false
+        loading: false
       })
     }
 
@@ -190,27 +190,21 @@ export default class NewsSection extends Component {
   render() {
     return (
       <div className='container mt-3'>
-        <h1 className="text-center mt-6" style={{marginTop: '5rem'}}>EchoNews! - Top  News of the Day!</h1>
-       {this.state.loading && <div className="w-100 text-center mt-5"><div className="spinner-border  text-warning" style={{width: '2rem', height:' 2rem'}} role="status">
+        <h1 className="text-center mt-6" style={{ marginTop: '5rem' }}>EchoNews! - Top  News of the Day!</h1>
+        {this.state.loading && <div className="w-100 text-center mt-5"><div className="spinner-border  text-warning" style={{ width: '2rem', height: ' 2rem' }} role="status">
           <span className="visually-hidden">Loading...</span>
-        </div> 
-        {/* <div class="spinner-grow  text-warning" style={{width: '1rem', height:' 1rem'}} role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div> 
-        <div class="spinner-grow  text-warning" style={{width: '1rem', height:' 1rem'}} role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>*/}
+        </div>
         </div>}
         <div className="row">
           {!this.state.loading && this.state.articles?.map((element) => {
             return <div className="col-md-4 mt-3 ml-5" key={element.url}>
-              <NewsItem title={element.title} imgUrl={element.urlToImage} description={element.description} newUrl={element.url} conTime={element.publishedAt} author={element.author}/>
-              
+              <NewsItem title={element.title} imgUrl={element.urlToImage} description={element.description} newUrl={element.url} conTime={element.publishedAt} author={element.author} />
+
             </div>
           })}
-          <div className="d-flex justify-content-between mb-5">
+          <div className="d-flex justify-content-between mb-5 mt-3">
             <button disabled={this.state.page <= 1} type="button" className="btn btn-dark" onClick={this.prevPage}> &larr;Prev</button>
-            <button disabled="" type="button" className="btn btn-dark" onClick={this.nextPage}>Next&rarr;</button>
+            <button disabled={this.state.page + 1 > (Math.ceil(this.state.totalResults / this.props.pageSize))} type="button" className="btn btn-dark" onClick={this.nextPage}>Next&rarr;</button>
           </div>
         </div>
       </div>
